@@ -33,9 +33,6 @@ class NewTaskMenu : BottomSheetDialogFragment() {
     private fun saveAction() {
         taskViewModel.name.value = binding.taskNameInput.text.toString()
         taskViewModel.desc.value = binding.taskDescInput.text.toString()
-        binding.taskNameInput.setText("")
-        binding.taskDescInput.setText("")
         dismiss()
-
     }
 }
