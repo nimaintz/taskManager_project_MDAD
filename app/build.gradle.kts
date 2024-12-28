@@ -7,6 +7,11 @@ android {
     namespace = "com.example.taskmanager_project_mdad"
     compileSdk = 35
 
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.taskmanager_project_mdad"
         minSdk = 24
@@ -33,6 +38,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
 }
 
 dependencies {

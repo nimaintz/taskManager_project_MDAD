@@ -39,13 +39,26 @@
         android:layout_margin="50dp"
         android:orientation="vertical">
 
+        <!--android:text="Task Manager" -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Task Manager"
             style ="@style/TextAppearance.AppCompat.Title"
             android:layout_margin="20dp"
-            android:layout_gravity="center"/>
+            android:text="Task Name"
+            android:layout_gravity="center"
+            android:id="@+id/task_name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task Description"
+            style ="@style/TextAppearance.AppCompat.Title"
+            android:layout_margin="20dp"
+            android:layout_gravity="center"
+            android:id="@+id/task_desc"/>
+
+
 
 
         <Button
