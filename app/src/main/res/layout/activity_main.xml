@@ -1,58 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Task Manager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/settings_button"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Settings" />
+        android:text="Settings"
+        android:padding="5dp"
+        android:layout_margin="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:icon="@drawable/baseline_app_settings_alt_24"
+        />
 
     <Button
         android:id="@+id/pomodoro_button"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Pomodoro Timer" />
+        android:text="Pomodoro Timer"
+        android:padding="5dp"
+        android:layout_margin="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        app:icon="@drawable/baseline_av_timer_24"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task Manager"
+            style ="@style/TextAppearance.AppCompat.Title"
+            android:layout_margin="20dp"
+            android:layout_gravity="center"/>
+
+
+        <Button
+            android:id="@+id/edit_task_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/edit_category_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Edit" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/new_task_button"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Task" />
+        android:text="Task"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:layout_margin="25dp"
+        app:icon="@drawable/baseline_add_24"
+        />
 
     <Button
         android:id="@+id/new_category_button"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Category" />
+        android:text="Category"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:padding="5dp"
+        android:layout_margin="20dp"
+        app:icon="@drawable/baseline_add_24"
+        />
 
-    <Button
-        android:id="@+id/edit_task_button"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Edit" />
-
-    <Button
-        android:id="@+id/edit_category_button"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Edit" />
-
-
-
-</LinearLayout>
+</RelativeLayout>
