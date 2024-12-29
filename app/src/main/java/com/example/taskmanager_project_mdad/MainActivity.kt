@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,16 +22,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         taskViewModel = ViewModelProvider(this).get(TaskView::class.java)
         binding.newTaskButton.setOnClickListener(){
-              NewTaskMenu().show(supportFragmentManager, "newTaskTag")
+              NewTaskMenu(null).show(supportFragmentManager, "newTaskTag")
         }
 
-        taskViewModel.name.observe(this){
-            binding.taskName.text = String.format("Task Name: %s", it)
-        }
+//        taskViewModel.name.observe(this){
+//            binding.taskName.text = String.format("Task Name: %s", it)
+//        }
+//
+//        taskViewModel.desc.observe(this){
+//            binding.taskDesc.text = String.format("Task Description: %s", it)
+//        }
 
-        taskViewModel.desc.observe(this){
-            binding.taskDesc.text = String.format("Task Description: %s", it)
-        }
+        setRecycleView()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -38,6 +41,16 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+    }
+
+    private fun setRecycleView() {
+        val mainActivity = this
+        taskViewModel.taskItems.observe(this){
+            binding.todoListRecyclerView.apply {
+                layoutManager = LinearLayoutManager(applicationContext)
+                adapter = TaskItemAdapter(it)
+            }
+        }
     }
 
 }
