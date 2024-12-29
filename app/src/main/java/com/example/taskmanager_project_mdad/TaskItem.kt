@@ -11,19 +11,22 @@ class TaskItem(
     var desc: String,
     var dueTime: LocalTime?,
     var completedDate: LocalDate?,
+    var dueDate: LocalDate?,
     var id: UUID = UUID.randomUUID()
 ) {
 
     fun isCompleted():Boolean {
        return completedDate != null
     }
+
     fun imageResource(): Int {
         if(isCompleted())
             return  R.drawable.baseline_check_box_24
         else return R.drawable.check_box_blank
     }
 
-    fun imageColor()
-
+    fun imageColor(context: Context): Int =if(isCompleted()) purple(context) else black(context)
     private fun purple(context: Context) = ContextCompat.getColor(context, R.color.purple)
+    private fun black(context: Context) = ContextCompat.getColor(context, R.color.black)
+
 }
