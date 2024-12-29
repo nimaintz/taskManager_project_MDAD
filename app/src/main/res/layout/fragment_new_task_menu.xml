@@ -14,7 +14,8 @@
         style="@style/TextAppearance.AppCompat.Title"
         android:textSize="30sp"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="20dp"
+        android:id="@+id/task_title"/>
 
     <EditText
         style ="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
@@ -47,5 +48,9 @@
         android:layout_gravity="end"
         android:padding="5dp"
         android:layout_margin="20dp"/>
+
+<!--    <DatePicker-->
+<!--        android:layout_width="426dp"-->
+<!--        android:layout_height="wrap_content" />-->
 
 </LinearLayout>
