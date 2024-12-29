@@ -23,7 +23,7 @@ class TaskItem(
         else return R.drawable.check_box_blank
     }
 
-    fun imageColor()
+    //fun imageColor()
 
     private fun purple(context: Context) = ContextCompat.getColor(context, R.color.purple)
 }

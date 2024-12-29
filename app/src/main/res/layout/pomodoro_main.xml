@@ -15,8 +15,55 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+        android:layout_gravity="center"
+        android:paddingTop="30dp"/>
 
-<!--    TODO: implement the pomodoro timer-->
+    <RadioGroup
+        android:id="@+id/sessionOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_margin="30dp">
+
+        <RadioButton
+            android:id="@+id/radio25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25 min"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radio50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50 min" />
+
+        <RadioButton
+            android:id="@+id/radio75"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="75 min" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/start_stop_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:text="Start"
+        android:layout_margin="30dp"/>
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="25:00"
+        android:textSize="48sp"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="center"
+        android:padding="50dp"/>
 
 </LinearLayout>
