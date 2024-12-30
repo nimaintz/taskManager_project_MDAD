@@ -2,6 +2,7 @@ package com.example.taskmanager_project_mdad
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,7 +13,9 @@ import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var taskViewModel: TaskView
+    private val taskViewModel: TaskView by viewModels {
+        TaskItemModelFactory((application as ToDoApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +23,7 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        taskViewModel = ViewModelProvider(this).get(TaskView::class.java)
+
         binding.newTaskButton.setOnClickListener(){
               NewTaskMenu(null).show(supportFragmentManager, "newTaskTag")
         }
@@ -60,5 +63,10 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
     override fun completeTaskItem(taskItem: TaskItem) {
         taskViewModel.setCompleted(taskItem)
     }
+
+    override fun deleteTaskItem(taskItem: TaskItem) {
+        taskViewModel.deleteTaskItem(taskItem)
+    }
+
 
 }

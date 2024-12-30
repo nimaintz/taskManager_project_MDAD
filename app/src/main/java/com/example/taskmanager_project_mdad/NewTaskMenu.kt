@@ -12,6 +12,7 @@ import com.example.taskmanager_project_mdad.databinding.FragmentNewTaskMenuBindi
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class NewTaskMenu(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewTaskMenuBinding
@@ -29,13 +30,13 @@ class NewTaskMenu(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
             binding.taskNameInput.text = editable.newEditable(taskItem!!.name)
             binding.taskDescInput.text = editable.newEditable(taskItem!!.desc)
 
-            if(taskItem!!.dueTime != null){
-                dueTime = taskItem!!.dueTime!!
+            if(taskItem!!.dueTime() != null){
+                dueTime = taskItem!!.dueTime()!!
                 updateTimeButtonText()
             }
 
-            if(taskItem!!.dueDate != null){
-                dueDate = taskItem!!.dueDate!!
+            if(taskItem!!.dueDate() != null){
+                dueDate = taskItem!!.dueDate()!!
                 updateDateButtonText()
             }
 
@@ -102,14 +103,21 @@ class NewTaskMenu(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
     private fun saveAction() {
         val name= binding.taskNameInput.text.toString()
         val desc = binding.taskDescInput.text.toString()
+        val dueTimeString = if(dueTime == null) null else DateTimeFormatter.ISO_TIME.format(dueTime)
+        val dueDateString = if(dueDate == null) null else DateTimeFormatter.ISO_DATE.format(dueDate)
+
         if(taskItem == null)
         {
-            val newTask = TaskItem(name,desc,dueTime,null,dueDate)
+            val newTask = TaskItem(name,desc,dueTimeString,null,dueDateString)
             taskViewModel.addTaskItem(newTask)
         }
         else
         {
-            taskViewModel.updateTaskItem(taskItem!!.id, name, desc, dueTime,dueDate)
+            taskItem!!.name = name
+            taskItem!!.desc = desc
+            taskItem!!.dueTimeString = dueTimeString
+            taskItem!!.dueDateString = dueDateString
+            taskViewModel.updateTaskItem(taskItem!!)
         }
         dismiss()
     }
