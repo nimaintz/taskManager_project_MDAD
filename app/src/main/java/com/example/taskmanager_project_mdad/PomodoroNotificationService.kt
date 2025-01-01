@@ -11,7 +11,7 @@ class PomodoroNotificationService : Service() {
 
     companion object {
         const val CHANNEL_ID = "PomodoroServiceChannel"
-        const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_ID = 2
         const val ACTION_UPDATE = "ACTION_UPDATE"
         const val EXTRA_MESSAGE = "EXTRA_MESSAGE"
     }
