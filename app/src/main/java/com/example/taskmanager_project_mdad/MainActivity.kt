@@ -25,8 +25,21 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        taskViewModel = ViewModelProvider(this).get(TaskView::class.java)
+
+        binding.pomodoroButton.setOnClickListener {
+            val intent = Intent(this, PomodoroActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
 
         binding.newTaskButton.setOnClickListener(){
+
               NewTaskMenu(null).show(supportFragmentManager, "newTaskTag")
         }
 

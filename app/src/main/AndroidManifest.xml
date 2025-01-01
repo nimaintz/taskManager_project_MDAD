@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
     <application
         android:name=".ToDoApplication"
@@ -31,6 +32,18 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".PomodoroActivity">
+        </activity>
+        <activity
+            android:name=".SettingsActivity">
+        </activity>
+
+        <service
+            android:name=".PomodoroNotificationService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"/>
+      
     </application>
 
 

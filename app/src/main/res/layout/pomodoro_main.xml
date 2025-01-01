@@ -15,8 +15,144 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+        android:layout_gravity="center"
+        android:paddingTop="30dp"/>
 
-<!--    TODO: implement the pomodoro timer-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timer_options"
+        android:text="Study Session Options:"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:textSize="17dp"/>
+    <RadioGroup
+        android:id="@+id/sessionOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp">
+
+        <RadioButton
+            android:id="@+id/radio25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25 min"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radio50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50 min" />
+
+        <RadioButton
+            android:id="@+id/radio75"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="75 min" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/break_options"
+        android:text="Small Break Options:"
+        android:layout_gravity="center"
+        android:textSize="17dp"/>
+    <RadioGroup
+        android:id="@+id/small_break"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp">
+
+        <RadioButton
+            android:id="@+id/radio5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 min"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radio10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 min" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/large_break_options"
+        android:text="Break after 4 study sessions:"
+        android:textSize="17dp"
+        android:layout_gravity="center"/>
+
+    <RadioGroup
+        android:id="@+id/large_break"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp">
+
+        <RadioButton
+            android:id="@+id/radio15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15 min"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radio30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30 min" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/start_stop_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="100dp"
+            android:text="Start"/>
+
+        <Button
+            android:id="@+id/pause_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="50dp"
+            android:text="Pause"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="25:00"
+        android:textSize="48sp"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="center"
+        android:paddingTop="50dp"
+        android:paddingBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sessions_count"
+        android:text="Sessions Count:"
+        android:layout_gravity="center"
+        android:textSize="17dp"/>
 
 </LinearLayout>
