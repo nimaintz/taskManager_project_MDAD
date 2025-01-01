@@ -1,8 +1,10 @@
 package com.example.taskmanager_project_mdad
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -10,10 +12,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
 
+class MainActivity : AppCompatActivity(), TaskItemClickListner {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var taskViewModel: TaskView
+    private val taskViewModel: TaskView by viewModels {
+        TaskItemModelFactory((application as ToDoApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +37,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.newTaskButton.setOnClickListener{
+
+        binding.newTaskButton.setOnClickListener(){
+
               NewTaskMenu(null).show(supportFragmentManager, "newTaskTag")
         }
 
+
+        //Music
+
+        binding.toggleMusic.setOnClickListener {
+       if (binding.toggleMusic.isChecked){
+           startMusicService()
+       }else{
+           stopMusicService()
+       } }
 //        taskViewModel.name.observe(this){
 //            binding.taskName.text = String.format("Task Name: %s", it)
 //        }
@@ -60,9 +75,38 @@ class MainActivity : AppCompatActivity() {
         taskViewModel.taskItems.observe(this){
             binding.todoListRecyclerView.apply {
                 layoutManager = LinearLayoutManager(applicationContext)
-                adapter = TaskItemAdapter(it)
+                adapter = TaskItemAdapter(it, mainActivity)
             }
         }
     }
+
+    override fun editTaskItem(taskItem: TaskItem) {
+        NewTaskMenu(taskItem).show(supportFragmentManager, "newTaskTag")
+    }
+
+    override fun completeTaskItem(taskItem: TaskItem) {
+        taskViewModel.setCompleted(taskItem)
+    }
+
+    override fun deleteTaskItem(taskItem: TaskItem) {
+        taskViewModel.deleteTaskItem(taskItem)
+    }
+
+
+//Music
+    private fun startMusicService() {
+        val intent = Intent(this, MusicService::class.java).apply {
+            action = MusicService.ACTION_START
+        }
+        startService(intent)
+    }
+
+    private fun stopMusicService() {
+        val intent = Intent(this, MusicService::class.java).apply {
+            action = MusicService.ACTION_STOP
+        }
+        startService(intent)
+    }
+
 
 }

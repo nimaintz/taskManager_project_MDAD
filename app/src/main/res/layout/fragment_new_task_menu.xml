@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewTaskMenu"
@@ -40,16 +41,47 @@
         android:background="@drawable/text_border"
         />
 
-    <Button
-        android:id="@+id/edit_category_button"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Save"
-        android:layout_gravity="end"
-        android:padding="5dp"
-        android:layout_margin="20dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
 
-<!--    <DatePicker-->
+        <Button
+            android:id="@+id/time_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:layout_margin="15dp"
+            app:icon = "@drawable/clear_time"
+            />
+
+        <Button
+            android:id="@+id/date_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="Date"
+            app:icon="@drawable/calendar_month"
+            />
+
+        <Button
+            android:id="@+id/save_task_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_margin="15dp"
+            app:icon="@drawable/save_check"
+            />
+    </LinearLayout>
+
+
+
+    <!--    <CalendarView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+<!--        <DatePicker-->
 <!--        android:layout_width="426dp"-->
 <!--        android:layout_height="wrap_content" />-->
 
