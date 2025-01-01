@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        taskViewModel = ViewModelProvider(this).get(TaskView::class.java)
 
         binding.pomodoroButton.setOnClickListener {
             val intent = Intent(this, PomodoroActivity::class.java)
