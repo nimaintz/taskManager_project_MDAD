@@ -2,6 +2,7 @@ package com.example.taskmanager_project_mdad
 
 import android.content.Context
 import android.graphics.Paint
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager_project_mdad.databinding.TaskItemCellBinding
 import java.time.format.DateTimeFormatter
@@ -34,13 +35,22 @@ class TaskItemViewHolder(
             clickListener.editTaskItem(taskItem)
         }
 
-        if (taskItem.dueTime != null){
-            binding.dueTime.text = timeFormat.format(taskItem.dueTime)
+        binding.taskCellContainer.setOnLongClickListener{
+            clickListener.deleteTaskItem(taskItem)
+            Toast.makeText(context, "Item deleted :)", Toast.LENGTH_SHORT).show()
+            true
+
+        }
+
+
+
+        if (taskItem.dueTime() != null){
+            binding.dueTime.text = timeFormat.format(taskItem.dueTime())
         }
         else binding.dueTime.text = ""
 
-        if (taskItem.dueDate != null){
-            binding.dueDate.text = dateFormat.format(taskItem.dueDate)
+        if (taskItem.dueDate() != null){
+            binding.dueDate.text = dateFormat.format(taskItem.dueDate())
         }
         else binding.dueDate.text = ""
 

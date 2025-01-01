@@ -1,7 +1,10 @@
 package com.example.taskmanager_project_mdad
 
+import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -9,10 +12,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
+class MainActivity : AppCompatActivity(), TaskItemClickListner {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var taskViewModel: TaskView
+    private val taskViewModel: TaskView by viewModels {
+        TaskItemModelFactory((application as ToDoApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,11 +25,20 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        taskViewModel = ViewModelProvider(this).get(TaskView::class.java)
+
         binding.newTaskButton.setOnClickListener(){
               NewTaskMenu(null).show(supportFragmentManager, "newTaskTag")
         }
 
+
+        //Music
+
+        binding.toggleMusic.setOnClickListener {
+       if (binding.toggleMusic.isChecked){
+           startMusicService()
+       }else{
+           stopMusicService()
+       } }
 //        taskViewModel.name.observe(this){
 //            binding.taskName.text = String.format("Task Name: %s", it)
 //        }
@@ -60,5 +74,26 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
     override fun completeTaskItem(taskItem: TaskItem) {
         taskViewModel.setCompleted(taskItem)
     }
+
+    override fun deleteTaskItem(taskItem: TaskItem) {
+        taskViewModel.deleteTaskItem(taskItem)
+    }
+
+
+//Music
+    private fun startMusicService() {
+        val intent = Intent(this, MusicService::class.java).apply {
+            action = MusicService.ACTION_START
+        }
+        startService(intent)
+    }
+
+    private fun stopMusicService() {
+        val intent = Intent(this, MusicService::class.java).apply {
+            action = MusicService.ACTION_STOP
+        }
+        startService(intent)
+    }
+
 
 }
