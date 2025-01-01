@@ -1,9 +1,15 @@
 package com.example.taskmanager_project_mdad
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.taskmanager_project_mdad.databinding.PomodoroMainBinding
 import android.os.CountDownTimer
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import java.util.concurrent.TimeUnit
 
 class PomodoroActivity : AppCompatActivity() {
@@ -12,24 +18,38 @@ class PomodoroActivity : AppCompatActivity() {
     private var timer: CountDownTimer? = null
     private var isTimerRunning = false
     private var remainingTime: Long = 0L
-    private var selectedStudyTime = 25L // Default study session time (25 minutes)
-    private var selectedSmallBreakTime = 5L // Default small break time (5 minutes)
-    private var selectedLargeBreakTime = 15L // Default large break time (15 minutes)
+    private var selectedStudyTime = 1L // Default study session time (25 minutes)
+    private var selectedSmallBreakTime = 1L // Default small break time (5 minutes)
+    private var selectedLargeBreakTime = 1L // Default large break time (15 minutes)
     private var sessionCount = 0 // Number of completed sessions
     private var isBreak = false // Whether the current timer is a break
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (!isGranted) {
+                Toast.makeText(this, "Notification permission is required for foreground service", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
         binding = PomodoroMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Listener for study session length selection
         binding.sessionOptions.setOnCheckedChangeListener { _, checkedId ->
             selectedStudyTime = when (checkedId) {
-                R.id.radio25 -> 25L
+                R.id.radio25 -> 1L
                 R.id.radio50 -> 50L
                 R.id.radio75 -> 75L
-                else -> 25L
+                else -> 1L
             }
             if (!isTimerRunning) updateTimerText(selectedStudyTime * 60 * 1000)
         }
@@ -37,18 +57,18 @@ class PomodoroActivity : AppCompatActivity() {
         // Listener for small break selection
         binding.smallBreak.setOnCheckedChangeListener { _, checkedId ->
             selectedSmallBreakTime = when (checkedId) {
-                R.id.radio5 -> 5L
+                R.id.radio5 -> 1L
                 R.id.radio10 -> 10L
-                else -> 5L
+                else -> 1L
             }
         }
 
         // Listener for large break selection
         binding.largeBreak.setOnCheckedChangeListener { _, checkedId ->
             selectedLargeBreakTime = when (checkedId) {
-                R.id.radio15 -> 15L
+                R.id.radio15 -> 1L
                 R.id.radio30 -> 30L
-                else -> 15L
+                else -> 1L
             }
         }
 
@@ -81,11 +101,13 @@ class PomodoroActivity : AppCompatActivity() {
     private fun startSmallBreak() {
         isBreak = true
         startTimer(selectedSmallBreakTime * 60 * 1000)
+        sendNotification("Small Break Started: ${selectedSmallBreakTime} minutes")
     }
 
     private fun startLargeBreak() {
         isBreak = true
         startTimer(selectedLargeBreakTime * 60 * 1000)
+        sendNotification("Large Break Started: ${selectedLargeBreakTime} minutes")
     }
 
     private fun startTimer(timeInMillis: Long) {
@@ -113,10 +135,17 @@ class PomodoroActivity : AppCompatActivity() {
                     }
                 } else {
                     // After a break, start a new study session
+                    sendNotification("Break Over! Time to Study")
                     startStudySession()
                 }
             }
         }.start()
+    }
+
+    private fun sendNotification(message: String) {
+        val intent = Intent(this, PomodoroNotificationService::class.java)
+        intent.putExtra(PomodoroNotificationService.EXTRA_MESSAGE, message)
+        startService(intent)
     }
 
     private fun pauseTimer() {
@@ -146,4 +175,6 @@ class PomodoroActivity : AppCompatActivity() {
         val seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60
         binding.timerText.text = String.format("%02d:%02d", minutes, seconds)
     }
+
+
 }
