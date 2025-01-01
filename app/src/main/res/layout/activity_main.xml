@@ -20,6 +20,8 @@
         app:icon="@drawable/baseline_app_settings_alt_24"
         />
 
+
+
     <Button
         android:id="@+id/pomodoro_button"
         android:layout_height="wrap_content"
@@ -81,27 +83,18 @@
         app:icon="@drawable/baseline_add_24"
         />
 
-    <Button
-        android:id="@+id/start_music_button"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="START"
-        android:layout_alignParentBottom="true"
-        android:padding="5dp"
-        android:layout_margin="25dp"
-        app:icon="@drawable/baseline_add_24"
-        />
 
-    <Button
-        android:id="@+id/stop_music_button"
-        android:layout_height="wrap_content"
+
+    <ToggleButton
         android:layout_width="wrap_content"
-        android:text="STOP"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:padding="5dp"
+        android:id="@+id/toggle_music"
+        android:textOff="Start Music"
+        android:textOn="Stop Music"
+        android:checked="false"
         android:layout_margin="25dp"
-        app:icon="@drawable/baseline_add_24"
+        android:padding="5dp"
         />
 
 

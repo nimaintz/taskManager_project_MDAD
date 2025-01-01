@@ -33,18 +33,12 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         //Music
 
-        var mp: MediaPlayer
-        binding.startMusicButton.setOnClickListener {
-            startMusicService()
-//            mp = MediaPlayer.create(this, R.raw.bg_music_1)
-//            mp.start();
-        }
-
-        binding.stopMusicButton.setOnClickListener {
-            stopMusicService()
-         //mp.stop();
-        }
-
+        binding.toggleMusic.setOnClickListener {
+       if (binding.toggleMusic.isChecked){
+           startMusicService()
+       }else{
+           stopMusicService()
+       } }
 //        taskViewModel.name.observe(this){
 //            binding.taskName.text = String.format("Task Name: %s", it)
 //        }
