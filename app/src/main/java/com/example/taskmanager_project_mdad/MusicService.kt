@@ -66,10 +66,10 @@ class MusicService : Service() {
     private fun stopMusic() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
-            mediaPlayer.prepare()
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             Log.d("MusicService", "Music stopped")
+            sendMusicStoppedBroadcast()
         }
     }
 
@@ -124,7 +124,11 @@ class MusicService : Service() {
         }
     }
 
-
+    private fun sendMusicStoppedBroadcast() { // Add this function
+        //"add music stopped broadcast so that the button in the main activity is updated")
+        val intent = Intent("com.example.taskmanager_project_mdad.MUSIC_STOPPED")
+        sendBroadcast(intent)
+    }
 
 
     override fun onDestroy() {
