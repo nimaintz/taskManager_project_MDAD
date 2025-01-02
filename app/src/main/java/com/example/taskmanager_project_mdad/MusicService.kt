@@ -126,7 +126,7 @@ class MusicService : Service() {
     }
 
     private fun sendMusicStoppedBroadcast() { // Add this function
-        TODO("add music stopped broadcast so that the button in the main activity is updated")
+        //"add music stopped broadcast so that the button in the main activity is updated")
     }
 
 
