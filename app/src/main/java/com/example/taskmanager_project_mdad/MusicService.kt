@@ -70,6 +70,7 @@ class MusicService : Service() {
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             Log.d("MusicService", "Music stopped")
+            sendMusicStoppedBroadcast()
         }
     }
 
@@ -124,7 +125,9 @@ class MusicService : Service() {
         }
     }
 
-
+    private fun sendMusicStoppedBroadcast() { // Add this function
+        TODO("add music stopped broadcast so that the button in the main activity is updated")
+    }
 
 
     override fun onDestroy() {

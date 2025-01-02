@@ -1,16 +1,21 @@
 package com.example.taskmanager_project_mdad
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
+import android.Manifest
+import androidx.core.app.ActivityCompat
 
 
 class MainActivity : AppCompatActivity(), TaskItemClickListner {
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        checkNotificationPermission()
 
         binding.pomodoroButton.setOnClickListener {
             val intent = Intent(this, PomodoroActivity::class.java)
@@ -51,13 +57,6 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
        }else{
            stopMusicService()
        } }
-//        taskViewModel.name.observe(this){
-//            binding.taskName.text = String.format("Task Name: %s", it)
-//        }
-//
-//        taskViewModel.desc.observe(this){
-//            binding.taskDesc.text = String.format("Task Description: %s", it)
-//        }
 
         setRecycleView()
 
@@ -97,6 +96,7 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         val intent = Intent(this, MusicService::class.java).apply {
             action = MusicService.ACTION_START
         }
+
         startService(intent)
     }
 
@@ -104,8 +104,24 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         val intent = Intent(this, MusicService::class.java).apply {
             action = MusicService.ACTION_STOP
         }
+
         startService(intent)
     }
 
+
+    //Permissions for post notifications
+    private fun checkNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                101
+            )
+        } else {
+            //Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 }
