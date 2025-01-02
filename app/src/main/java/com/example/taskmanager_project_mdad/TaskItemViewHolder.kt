@@ -3,6 +3,7 @@ package com.example.taskmanager_project_mdad
 import android.content.Context
 import android.graphics.Paint
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager_project_mdad.databinding.TaskItemCellBinding
 import java.time.format.DateTimeFormatter
@@ -15,13 +16,19 @@ class TaskItemViewHolder(
 
     private val timeFormat = DateTimeFormatter.ofPattern("HH:mm")
     private val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
     fun bindTaskItem(taskItem: TaskItem){
+        //size after change
+        val sharedPref = context.getSharedPreferences("settingsPrefs", MODE_PRIVATE)
+        binding.name.textSize = sharedPref.getFloat("textSize", 14f)
+
 
         binding.name.text = taskItem.name
 
         if (taskItem.isCompleted()){
             binding.name.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             binding.dueTime.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            binding.dueDate.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         }
 
         binding.completeButton.setImageResource(taskItem.imageResource())
