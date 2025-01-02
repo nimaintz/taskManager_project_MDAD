@@ -2,19 +2,17 @@ package com.example.taskmanager_project_mdad
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
 import android.Manifest
+import android.content.SharedPreferences
 import androidx.core.app.ActivityCompat
 
 
@@ -24,6 +22,8 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         TaskItemModelFactory((application as ToDoApplication).repository)
     }
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         setContentView(binding.root)
         checkNotificationPermission()
 
+        //taskAdapter = TaskItemAdapter(mutableListOf(), this)
         binding.pomodoroButton.setOnClickListener {
             val intent = Intent(this, PomodoroActivity::class.java)
             startActivity(intent)
@@ -58,6 +59,16 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
            stopMusicService()
        } }
 
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("settingsPrefs", MODE_PRIVATE)
+
+        // Register listener for preference changes
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+            if (key == "textSize") {
+                updateRecyclerView()
+            }
+        }
+
         setRecycleView()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -68,6 +79,16 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Register listener for preference changes
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+            if (key == "textSize") {
+                updateRecyclerView()
+            }
+        }
+    }
+
     private fun setRecycleView() {
         val mainActivity = this
         taskViewModel.taskItems.observe(this){
@@ -76,6 +97,11 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
                 adapter = TaskItemAdapter(it, mainActivity)
             }
         }
+    }
+
+    private fun updateRecyclerView() {
+        // Notify the RecyclerView to refresh
+        binding.todoListRecyclerView.adapter?.notifyDataSetChanged()
     }
 
     override fun editTaskItem(taskItem: TaskItem) {
