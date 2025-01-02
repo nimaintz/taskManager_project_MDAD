@@ -2,26 +2,32 @@ package com.example.taskmanager_project_mdad
 
 import android.os.Bundle
 import android.widget.SeekBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.taskmanager_project_mdad.databinding.SettingsMainBinding
 
 class SettingsActivity : AppCompatActivity() {
 
-
+lateinit var binding: SettingsMainBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_main)
+        binding =  SettingsMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val sharedPref = getSharedPreferences("settingsPrefs", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        binding.textSizeVisual.textSize = sharedPref.getFloat("textSize", 17f)
+        binding.seekBar.progress = sharedPref.getFloat("textSize", 17f).toInt()
 
-
-        var textSizeVisual = findViewById<TextView>(R.id.text_size_visual)
-        val seekBar1 = findViewById<SeekBar>(R.id.seek_bar)
-
-        seekBar1.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val size = progress.toFloat()
-                textSizeVisual.textSize = size
+                editor.apply{
+                    putFloat("textSize", size)
+                    apply()
+                }
+               binding.textSizeVisual.textSize = sharedPref.getFloat("textSize", 0.0f)
+                //binding.textSizeVisual.textSize = size
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -32,6 +38,8 @@ class SettingsActivity : AppCompatActivity() {
                 // Optional: Handle when the user stops interacting with the SeekBar
             }
         })
+
+
     }
 
 
