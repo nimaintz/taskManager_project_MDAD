@@ -1,23 +1,47 @@
 package com.example.taskmanager_project_mdad
 
 import android.content.Intent
-import android.media.MediaPlayer
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
+import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
+import android.content.SharedPreferences
+import android.telephony.TelephonyManager
+import androidx.core.app.ActivityCompat
 
 
 class MainActivity : AppCompatActivity(), TaskItemClickListner {
     private lateinit var binding: ActivityMainBinding
+
+    //Broadcast Recievers
+    private val callReciver =  CallReciver()
+    private val musicStoppedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "com.example.taskmanager_project_mdad.MUSIC_STOPPED") {
+                runOnUiThread {
+                binding.toggleMusic.isChecked = false
+                }
+            }
+        }
+    }
+
+
     private val taskViewModel: TaskView by viewModels {
         TaskItemModelFactory((application as ToDoApplication).repository)
     }
+
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +49,17 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        checkNotificationPermission()
+        checkPhonePermission()
+        val filter = IntentFilter("com.example.taskmanager_project_mdad.MUSIC_STOPPED")
+        registerReceiver(musicStoppedReceiver, filter, Context.RECEIVER_EXPORTED)
 
+        registerReceiver(
+            callReciver,
+            android.content.IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+        )
+
+        //taskAdapter = TaskItemAdapter(mutableListOf(), this)
         binding.pomodoroButton.setOnClickListener {
             val intent = Intent(this, PomodoroActivity::class.java)
             startActivity(intent)
@@ -51,13 +85,14 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
        }else{
            stopMusicService()
        } }
-//        taskViewModel.name.observe(this){
-//            binding.taskName.text = String.format("Task Name: %s", it)
-//        }
-//
-//        taskViewModel.desc.observe(this){
-//            binding.taskDesc.text = String.format("Task Description: %s", it)
-//        }
+
+        // SharedPreferences
+        sharedPreferences = getSharedPreferences("settingsPrefs", MODE_PRIVATE)
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+            if (key == "textSize") {
+                updateRecyclerView()
+            }
+        }
 
         setRecycleView()
 
@@ -69,6 +104,16 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Register listener for preference changes
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+            if (key == "textSize") {
+                updateRecyclerView()
+            }
+        }
+    }
+
     private fun setRecycleView() {
         val mainActivity = this
         taskViewModel.taskItems.observe(this){
@@ -77,6 +122,11 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
                 adapter = TaskItemAdapter(it, mainActivity)
             }
         }
+    }
+
+    private fun updateRecyclerView() {
+        // Notify the RecyclerView to refresh when text sixe changes
+        binding.todoListRecyclerView.adapter?.notifyDataSetChanged()
     }
 
     override fun editTaskItem(taskItem: TaskItem) {
@@ -97,6 +147,7 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         val intent = Intent(this, MusicService::class.java).apply {
             action = MusicService.ACTION_START
         }
+
         startService(intent)
     }
 
@@ -104,8 +155,44 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         val intent = Intent(this, MusicService::class.java).apply {
             action = MusicService.ACTION_STOP
         }
+
         startService(intent)
     }
 
+
+    //Permissions for post notifications
+    private fun checkNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                101
+            )
+        } else {
+            //Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun checkPhonePermission() {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_PHONE_STATE),
+                101
+            )
+        } else {
+            //Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(callReciver)
+        unregisterReceiver(musicStoppedReceiver)
+    }
 
 }
