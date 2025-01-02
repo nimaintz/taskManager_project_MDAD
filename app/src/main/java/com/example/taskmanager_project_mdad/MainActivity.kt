@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager_project_mdad.databinding.ActivityMainBinding
 import android.Manifest
 import android.content.SharedPreferences
+import android.telephony.TelephonyManager
 import androidx.core.app.ActivityCompat
 
 
 class MainActivity : AppCompatActivity(), TaskItemClickListner {
     private lateinit var binding: ActivityMainBinding
+    private val callReciver =  CallReciver()
+
     private val taskViewModel: TaskView by viewModels {
         TaskItemModelFactory((application as ToDoApplication).repository)
     }
@@ -31,6 +34,12 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         checkNotificationPermission()
+        checkPhonePermission()
+
+        registerReceiver(
+            callReciver,
+            android.content.IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+        )
 
         //taskAdapter = TaskItemAdapter(mutableListOf(), this)
         binding.pomodoroButton.setOnClickListener {
@@ -148,6 +157,25 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         } else {
             //Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun checkPhonePermission() {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_PHONE_STATE),
+                101
+            )
+        } else {
+            //Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(callReciver)
     }
 
 }

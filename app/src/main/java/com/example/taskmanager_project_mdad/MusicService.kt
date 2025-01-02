@@ -66,7 +66,6 @@ class MusicService : Service() {
     private fun stopMusic() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
-            mediaPlayer.prepare()
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             Log.d("MusicService", "Music stopped")
