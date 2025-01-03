@@ -1,12 +1,15 @@
 package com.example.taskmanager_project_mdad
 
+import android.R
 import android.content.Context
 import android.graphics.Paint
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmanager_project_mdad.databinding.TaskItemCellBinding
 import java.time.format.DateTimeFormatter
+
 
 class TaskItemViewHolder(
     private val context: Context,
@@ -46,7 +49,6 @@ class TaskItemViewHolder(
             clickListener.deleteTaskItem(taskItem)
             Toast.makeText(context, "Item deleted :)", Toast.LENGTH_SHORT).show()
             true
-
         }
 
 

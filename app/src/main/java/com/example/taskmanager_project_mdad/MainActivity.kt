@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        checkNotificationPermission()
-        checkPhonePermission()
+        checkPermissions()
+
         val filter = IntentFilter("com.example.taskmanager_project_mdad.MUSIC_STOPPED")
         registerReceiver(musicStoppedReceiver, filter, Context.RECEIVER_EXPORTED)
 
@@ -161,33 +161,34 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
 
     //Permissions for post notifications
-    private fun checkNotificationPermission() {
+    private fun checkPermissions() {
+        val permissionsToRequest = mutableListOf<String>()
+
         if (ContextCompat.checkSelfPermission(
-                this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
+            permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_PHONE_STATE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsToRequest.add(Manifest.permission.READ_PHONE_STATE)
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                101
+                permissionsToRequest.toTypedArray(),
+                123
             )
-        } else {
-            //Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun checkPhonePermission() {
-        if (ContextCompat.checkSelfPermission(
-                this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_PHONE_STATE),
-                101
-            )
-        } else {
-            //Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
