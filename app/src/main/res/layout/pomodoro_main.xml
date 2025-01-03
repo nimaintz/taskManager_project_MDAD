@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="25 min"
-            android:checked="true" />
+            android:checked="false" />
 
         <RadioButton
             android:id="@+id/radio50"
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5 min"
-            android:checked="true" />
+            android:checked="false" />
 
         <RadioButton
             android:id="@+id/radio10"
@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="15 min"
-            android:checked="true" />
+            android:checked="false" />
 
         <RadioButton
             android:id="@+id/radio30"
@@ -153,6 +153,15 @@
         android:id="@+id/sessions_count"
         android:text="Sessions Count:"
         android:layout_gravity="center"
+        android:textSize="17dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/status_pomodoro"
+        android:text="Options are left at 1 min each for testing purposes"
+        android:layout_gravity="center"
+        android:paddingTop="50dp"
         android:textSize="17dp"/>
 
 </LinearLayout>
