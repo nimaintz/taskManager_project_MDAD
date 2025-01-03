@@ -1,47 +1,31 @@
 package com.example.taskmanager_project_mdad
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.taskmanager_project_mdad.databinding.PomodoroMainBinding
 import android.os.CountDownTimer
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
+import android.util.Log
 import java.util.concurrent.TimeUnit
 
 class PomodoroActivity : AppCompatActivity() {
     private lateinit var binding: PomodoroMainBinding
+    private lateinit var dataHelper: DataHelper
 
     private var timer: CountDownTimer? = null
-    private var isTimerRunning = false
-    private var remainingTime: Long = 0L
-    private var selectedStudyTime = 1L // Default study session time (25 minutes)
-    private var selectedSmallBreakTime = 1L // Default small break time (5 minutes)
-    private var selectedLargeBreakTime = 1L // Default large break time (15 minutes)
-    private var sessionCount = 0 // Number of completed sessions
-    private var isBreak = false // Whether the current timer is a break
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (!isGranted) {
-                Toast.makeText(this, "Notification permission is required for foreground service", Toast.LENGTH_SHORT).show()
-            }
-        }
+    private var selectedStudyTime: Long? = 25L
+    private var selectedSmallBreakTime: Long? = 5L // Default small break time (5 minutes)
+    private var selectedLargeBreakTime: Long? = 15L // Default large break time (15 minutes)
+    private var sessionCount: Int = 0 // Number of completed sessions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-
         binding = PomodoroMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        dataHelper = DataHelper(applicationContext)
+
+        loadSavedPreferences()
 
         // Listener for study session length selection
         binding.sessionOptions.setOnCheckedChangeListener { _, checkedId ->
@@ -51,7 +35,9 @@ class PomodoroActivity : AppCompatActivity() {
                 R.id.radio75 -> 75L
                 else -> 1L
             }
-            if (!isTimerRunning) updateTimerText(selectedStudyTime * 60 * 1000)
+            Log.d("PomodoroStuff", "session options clicked ${selectedStudyTime}")
+            dataHelper.saveSelectedStudyTime(selectedStudyTime!!)
+            if (!dataHelper.isTimerRunning()) updateTimerText(selectedStudyTime!! * 60 * 1000)
         }
 
         // Listener for small break selection
@@ -61,6 +47,7 @@ class PomodoroActivity : AppCompatActivity() {
                 R.id.radio10 -> 10L
                 else -> 1L
             }
+            dataHelper.saveSelectedSmallBreakTime(selectedSmallBreakTime!!)
         }
 
         // Listener for large break selection
@@ -70,64 +57,145 @@ class PomodoroActivity : AppCompatActivity() {
                 R.id.radio30 -> 30L
                 else -> 1L
             }
+            dataHelper.saveSelectedLargeBreakTime(selectedLargeBreakTime!!)
         }
 
         // Start button logic
         binding.startStopButton.setOnClickListener {
-            if (isTimerRunning) {
+
+            if (dataHelper.isTimerRunning()) {
                 stopTimer()
+                binding.statusPomodoro.text= "Stoped"
             } else {
-                if (remainingTime > 0L) {
+                if (dataHelper.getRemainingTime() > 0L) {
                     resumeTimer()
+                    binding.statusPomodoro.text= "Resumed"
                 } else {
                     startStudySession()
+                    binding.statusPomodoro.text= "Started"
                 }
             }
         }
 
         // Pause button logic
         binding.pauseButton.setOnClickListener {
+            binding.statusPomodoro.text= "Paused"
             pauseTimer()
         }
     }
 
+    private fun loadSavedPreferences() {
+        sessionCount = dataHelper.getSessionCount()
+        selectedStudyTime = dataHelper.getSelectedStudyTime()
+        Log.d("PomodoroStuff", "load preferences${selectedStudyTime}")
+        loadStudyTime()
+        selectedSmallBreakTime = dataHelper.getSelectedSmallBreakTime()
+        loadSmallBreak()
+        selectedLargeBreakTime = dataHelper.getSelectedLargeBreakTime()
+        loadLargeBreak()
+
+        binding.sessionsCount.text = "Sessions Count: $sessionCount"
+        if(dataHelper.isTimerRunning()){
+            startingPoint()
+        }
+        else {
+            stoppingPoint()
+        }
+    }
+
+    private fun loadSmallBreak() {
+        if(selectedSmallBreakTime == 1L) //change to 5
+            binding.radio5.isChecked = true
+        else if(selectedSmallBreakTime == 10L)
+            binding.radio10.isChecked = true
+
+    }
+
+    private fun loadStudyTime() {
+        if(selectedStudyTime == 1L)//change to 25
+            binding.radio25.isChecked = true
+        else if(selectedStudyTime == 50L)
+            binding.radio50.isChecked = true
+        else if(selectedStudyTime == 75L)
+            binding.radio75.isChecked = true
+
+
+    }
+
+    private fun loadLargeBreak() {
+        if(selectedLargeBreakTime == 1L) //change to 15
+            binding.radio15.isChecked = true
+        else if(selectedLargeBreakTime == 30L)
+            binding.radio30.isChecked = true
+    }
+
+
+
+    private fun stoppingPoint() {
+        dataHelper.saveTimerRunning(false)
+        if(dataHelper.getIsBreak())
+        {
+            binding.startStopButton.text = "Stop"
+            updateTimerText(dataHelper.getRemainingTime())
+        }
+        if(!dataHelper.getIsBreak() && dataHelper.getRemainingTime() == 0L){
+            //it was stopped
+            binding.startStopButton.text = "Start"
+            updateTimerText(dataHelper.getSelectedStudyTime()* 60 * 1000)
+        }
+        else {
+            binding.startStopButton.text = "Resume"
+            updateTimerText(dataHelper.getRemainingTime())
+        }
+    }
+
+    private fun startingPoint() {
+        dataHelper.saveTimerRunning(true)
+        binding.startStopButton.text = "Stop"
+        updateTimerText(dataHelper.getRemainingTime())
+    }
+
     private fun startStudySession() {
         sessionCount += 1
+        dataHelper.saveSessionCount(sessionCount)
         binding.sessionsCount.text = "Sessions Count: $sessionCount"
-        isBreak = false
-        startTimer(selectedStudyTime * 60 * 1000)
+        dataHelper.saveIsBreak(false)
+        startTimer(dataHelper.getSelectedStudyTime() * 60 * 1000)
     }
 
     private fun startSmallBreak() {
-        isBreak = true
-        startTimer(selectedSmallBreakTime * 60 * 1000)
+        dataHelper.saveIsBreak(true)
+        startTimer(dataHelper.getSelectedSmallBreakTime() * 60 * 1000)
         sendNotification("Small Break Started: ${selectedSmallBreakTime} minutes")
     }
 
     private fun startLargeBreak() {
-        isBreak = true
-        startTimer(selectedLargeBreakTime * 60 * 1000)
+        dataHelper.saveIsBreak(true)
+        startTimer(dataHelper.getSelectedLargeBreakTime() * 60 * 1000)
         sendNotification("Large Break Started: ${selectedLargeBreakTime} minutes")
     }
 
     private fun startTimer(timeInMillis: Long) {
-        isTimerRunning = true
-        remainingTime = timeInMillis
+        dataHelper.saveTimerRunning(true)
+        dataHelper.saveRemainingTime(timeInMillis)
         binding.startStopButton.text = "Stop"
-        binding.timerText.text = if (isBreak) "Break Time!" else "Study Time!"
+        sendStartingNotification("Pomodoro is now running")
+
+
+        //binding.timerText.text = if (isBreak) "Break Time!" else "Study Time!"
 
         timer = object : CountDownTimer(timeInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                remainingTime = millisUntilFinished
+                dataHelper.saveRemainingTime(millisUntilFinished)
                 updateTimerText(millisUntilFinished)
             }
 
             override fun onFinish() {
-                isTimerRunning = false
+                dataHelper.saveTimerRunning(false)
                 binding.startStopButton.text = "Start"
 
                 // Determine the next phase
-                if (!isBreak) {
+                if (!dataHelper.getIsBreak()) {
                     if (sessionCount % 4 == 0) {
                         startLargeBreak()
                     } else {
@@ -148,26 +216,38 @@ class PomodoroActivity : AppCompatActivity() {
         startService(intent)
     }
 
+    private fun sendStartingNotification(message: String) {
+        val intent2 = Intent(this, PomodoroNotificationService::class.java).apply {
+            putExtra(PomodoroNotificationService.EXTRA_MESSAGE, message)
+            putExtra(PomodoroNotificationService.EXTRA_NOTIFICATION_ID, 3) // ID 3
+        }
+        startService(intent2)
+    }
+
+
+
     private fun pauseTimer() {
-        if (isTimerRunning) {
+        if (dataHelper.isTimerRunning()) {
             timer?.cancel()
-            isTimerRunning = false
+            dataHelper.saveTimerRunning(false)
+            sendStartingNotification("Pomodoro is now paused")
             binding.startStopButton.text = "Resume"
         }
     }
 
     private fun resumeTimer() {
-        if (!isTimerRunning && remainingTime > 0L) {
-            startTimer(remainingTime)
+        if (!dataHelper.isTimerRunning() && dataHelper.getRemainingTime() > 0L) {
+            startTimer(dataHelper.getRemainingTime())
         }
     }
 
     private fun stopTimer() {
-        isTimerRunning = false
+        dataHelper.saveTimerRunning(false)
         binding.startStopButton.text = "Start"
         timer?.cancel()
-        remainingTime = 0L
-        updateTimerText(selectedStudyTime * 60 * 1000)
+        dataHelper.saveRemainingTime(0L)
+        sendStartingNotification("Pomodoro has stopped")
+        updateTimerText(dataHelper.getSelectedStudyTime() * 60 * 1000)
     }
 
     private fun updateTimerText(millis: Long) {
@@ -175,6 +255,7 @@ class PomodoroActivity : AppCompatActivity() {
         val seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60
         binding.timerText.text = String.format("%02d:%02d", minutes, seconds)
     }
+
 
 
 }
