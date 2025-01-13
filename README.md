@@ -102,23 +102,23 @@ TaskManagerApp/
    ```
 3. Intents
  > Intents are used for linking activities and starting services.
-    ```
+```
    binding.pomodoroButton.setOnClickListener {
                val intent = Intent(this, PomodoroActivity::class.java)
                startActivity(intent)
            }
-   ```
+```
 4. Activities
    >I have used different activities to separate between ussages. The activities created are as follows: MainActivity, SettingsActivity and PomodoroActivity
 
 5. Broadcast Recivers
    > The background music stops when reciving a call
-   ```
+```
       registerReceiver(
                   callReciver,
                   android.content.IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
               )
-        ```
+```
 
 6. Shared Preferences
  >Settings are saved in shared preferences and loaded in MainActivity
