@@ -1,6 +1,19 @@
+# GitHub Link
+
+The source code can be found [here](https://github.com/nimaintz/taskManager_project_MDAD).
+
+---
+
+# Team Members
+
+- Liță Naomi 1231EA
+- Chiorean Rebeca 1231EA
+
+---
+
 # Task Manager App
 
-Task Manager is a simple Android application that helps you organize and manage your tasks effectively. It also includes a Pomodoro timer to improve focus and productivity.
+Task Manager is a simple Android application that helps you organize and manage your tasks effectively. It also includes a Pomodoro timer to improve focus and productivity. You can also play music while on the app.
 
 ---
 
@@ -10,12 +23,13 @@ Task Manager is a simple Android application that helps you organize and manage 
 - Add, edit, and delete tasks.
 - Categorize tasks and view them in a clean list using a RecyclerView.
 - Mark tasks as complete using a checkbox.
-- Listen to music
+- Listen to music(it closes automatically when you recive a call and can be closed from the notification pannel)
 
 ### Pomodoro Timer
 - Focus on tasks using a built-in Pomodoro timer.
 - Choose session durations of 25, 50, or 75 minutes.
 - Start/Stop the timer with a simple button click.
+- It also send a notification every pomodoro session.
 
 ### Settings
 - Switch between light and dark themes.
@@ -25,7 +39,11 @@ Task Manager is a simple Android application that helps you organize and manage 
 
 ## Screenshots
 
-*(Include screenshots of the app's main screens here)*
+![image](https://github.com/user-attachments/assets/5e68546a-cc0a-42b3-96e4-158b17515d09)
+![image](https://github.com/user-attachments/assets/71088f58-ae5c-4e7a-8835-7236bacf58fd)
+![image](https://github.com/user-attachments/assets/be38b964-8da7-4408-998c-a58ead7e051c)
+![image](https://github.com/user-attachments/assets/69d50497-571c-4ec2-8702-6d8e46c34d14)
+
 
 ---
 
@@ -45,6 +63,35 @@ TaskManagerApp/
 
 ---
 
+# Implementation of concepts
+
+1. Foreground Services 
+   > Used for the music notification. The notification is started in a foreground service.
+   ```
+   private fun startMusic() {
+        if (!mediaPlayer.isPlaying) {
+            mediaPlayer.start()
+            startForeground(1, createNotification(isPlaying = true))
+            Log.d("MusicService", "Music started")
+        }
+
+    }
+   ```
+2. Background Services
+   > To be added
+
+3. Intents
+
+4. Activities
+
+5. Broadcast Recivers
+
+6. Shared Preferences
+
+7. Database
+
+8. Notifications
+
 ## XML Layouts
 
 ### `activity_main.xml`
@@ -61,55 +108,6 @@ Provides a settings screen to toggle themes and adjust text size.
 
 ### `task_item_cell.xml`
 Defines the layout for individual task items in the RecyclerView.
-
----
-
-## How to Build and Run
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/TaskManagerApp.git
-   ```
-
-2. Open the project in Android Studio.
-
-3. Sync the project with Gradle files.
-
-4. Build and run the app on an emulator or physical device.
-
----
-
-## Dependencies
-
-- RecyclerView for task lists.
-- CardView for task item cells.
-- Material Components for modern UI design.
-
-Add these dependencies to your `build.gradle` file:
-```gradle
-implementation 'androidx.recyclerview:recyclerview:1.2.1'
-implementation 'androidx.cardview:cardview:1.0.0'
-implementation 'com.google.android.material:material:1.8.0'
-```
-
----
-
-## Contributing
-
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Make your changes and commit them:
-   ```bash
-   git commit -m "Description of changes"
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a pull request.
 
 ---
 
