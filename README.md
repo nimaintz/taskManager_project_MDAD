@@ -1,6 +1,6 @@
 # Task Manager App
 
-Task Manager is a simple Android application that helps you organize and manage your tasks effectively. It also includes a Pomodoro timer to improve focus and productivity.
+Task Manager is a simple Android application that helps you organize and manage your tasks effectively. It also includes a Pomodoro timer to improve focus and productivity. You can also play music while on the app.
 
 ---
 
@@ -10,12 +10,13 @@ Task Manager is a simple Android application that helps you organize and manage 
 - Add, edit, and delete tasks.
 - Categorize tasks and view them in a clean list using a RecyclerView.
 - Mark tasks as complete using a checkbox.
-- Listen to music
+- Listen to music(it closes automatically when you recive a call and can be closed from the notification pannel)
 
 ### Pomodoro Timer
 - Focus on tasks using a built-in Pomodoro timer.
 - Choose session durations of 25, 50, or 75 minutes.
 - Start/Stop the timer with a simple button click.
+- It also send a notification every pomodoro session.
 
 ### Settings
 - Switch between light and dark themes.
@@ -25,7 +26,7 @@ Task Manager is a simple Android application that helps you organize and manage 
 
 ## Screenshots
 
-*(Include screenshots of the app's main screens here)*
+
 
 ---
 
