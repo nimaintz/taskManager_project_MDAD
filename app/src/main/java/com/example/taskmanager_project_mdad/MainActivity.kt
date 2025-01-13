@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
 
     override fun onResume() {
         super.onResume()
-        // Register listener for preference changes
+        //listener for preference changes
         sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
             if (key == "textSize") {
                 updateRecyclerView()

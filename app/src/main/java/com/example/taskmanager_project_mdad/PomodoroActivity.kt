@@ -84,6 +84,13 @@ class PomodoroActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.statusPomodoro.text= "Paused"
+        pauseTimer()
+    }
+
     private fun loadSavedPreferences() {
         sessionCount = dataHelper.getSessionCount()
         selectedStudyTime = dataHelper.getSelectedStudyTime()
@@ -180,9 +187,6 @@ class PomodoroActivity : AppCompatActivity() {
         dataHelper.saveRemainingTime(timeInMillis)
         binding.startStopButton.text = "Stop"
         sendStartingNotification("Pomodoro is now running")
-
-
-        //binding.timerText.text = if (isBreak) "Break Time!" else "Study Time!"
 
         timer = object : CountDownTimer(timeInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
