@@ -23,7 +23,7 @@ Task Manager is a simple Android application that helps you organize and manage 
 - Add, edit, and delete tasks.
 - Categorize tasks and view them in a clean list using a RecyclerView.
 - Mark tasks as complete using a checkbox.
-- Listen to music(it closes automatically when you recive a call and can be closed from the notification pannel)
+- Listen to music (it closes automatically when you recive a call and can be closed from the notification panel)
 
 ### Pomodoro Timer
 - Focus on tasks using a built-in Pomodoro timer.
