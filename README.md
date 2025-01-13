@@ -109,7 +109,7 @@ TaskManagerApp/
            }
 ```
 4. Activities
-   >I have used different activities to separate between ussages. The activities created are as follows: MainActivity, SettingsActivity and PomodoroActivity
+   > I have used different activities to separate between ussages. The activities created are as follows: MainActivity, SettingsActivity and PomodoroActivity
 
 5. Broadcast Recivers
    > The background music stops when reciving a call
@@ -121,17 +121,17 @@ TaskManagerApp/
 ```
 
 6. Shared Preferences
- >Settings are saved in shared preferences and loaded in MainActivity
+ > Settings are saved in shared preferences and loaded in MainActivity
 ```
-sharedPreferences = getSharedPreferences("settingsPrefs", MODE_PRIVATE)
-        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
-            if (key == "textSize") {
-                updateRecyclerView()
-            }
-        }
-        
-        val savedTheme = sharedPreferences.getInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        AppCompatDelegate.setDefaultNightMode(savedTheme)
+   sharedPreferences = getSharedPreferences("settingsPrefs", MODE_PRIVATE)
+           sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+               if (key == "textSize") {
+                   updateRecyclerView()
+               }
+           }
+           
+           val savedTheme = sharedPreferences.getInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+           AppCompatDelegate.setDefaultNightMode(savedTheme)
 ```
    > Pomodoro timer saves all its information with shared preferences
 
@@ -147,25 +147,25 @@ sharedPreferences = getSharedPreferences("settingsPrefs", MODE_PRIVATE)
 7. Database
  > Task Items are saved in a room database
 ```
-fun getDatabase(context: Context): TaskItemDatabase{
-            return INSTANCE ?: synchronized(this){
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,TaskItemDatabase::class.java,"task_item_database"
-                ).build()
-                INSTANCE = instance
-                instance
-            }
+   fun getDatabase(context: Context): TaskItemDatabase{
+               return INSTANCE ?: synchronized(this){
+                   val instance = Room.databaseBuilder(
+                       context.applicationContext,TaskItemDatabase::class.java,"task_item_database"
+                   ).build()
+                   INSTANCE = instance
+                   instance
+               }
 ```
 
 8. Notifications
    > Notifications are sent for the pomodoro timer
-   ```
+```
    sendNotification("Large Break Started: ${selectedLargeBreakTime} minutes")
-   ```
+```
    > The music service sends notifications when the music is running in the background
-   ```
+```
     startForeground(1, createNotification(isPlaying = true))
-   ```
+```
 
 ## XML Layouts
 
