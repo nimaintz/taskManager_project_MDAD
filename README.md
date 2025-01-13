@@ -78,19 +78,95 @@ TaskManagerApp/
     }
    ```
 2. Background Services
-   > To be added
-
+   > Music Service plays music in the background. It also starts a notification so that the user can close the music without entering the app again.
+   ```
+   private fun startMusic() {
+        if (!mediaPlayer.isPlaying) {
+            mediaPlayer.start()
+            startForeground(1, createNotification(isPlaying = true))
+            Log.d("MusicService", "Music started")
+        }
+    }
+   ```
+   > Settings keeps track of how long the user kept the dark mode until the app was destroyed. This is a feature that could be further implemented to monitor user interaction with new features.
+   ```
+     R.id.radioLight -> {
+                       val intent = Intent(this, BackgroundService::class.java)
+                       stopService(intent)
+                       AppCompatDelegate.MODE_NIGHT_NO
+                   }
+                   R.id.radioDark -> {
+                       val intent = Intent(this, BackgroundService::class.java)
+                       startService(intent)
+                       AppCompatDelegate.MODE_NIGHT_YES
+                   }
+   ```
 3. Intents
-
+ > Intents are used for linking activities and starting services.
+    ```
+   binding.pomodoroButton.setOnClickListener {
+               val intent = Intent(this, PomodoroActivity::class.java)
+               startActivity(intent)
+           }
+   ```
 4. Activities
+   >I have used different activities to separate between ussages. The activities created are as follows: MainActivity, SettingsActivity and PomodoroActivity
 
 5. Broadcast Recivers
+   > The background music stops when reciving a call
+   ```
+      registerReceiver(
+                  callReciver,
+                  android.content.IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+              )
+        ```
 
 6. Shared Preferences
+ >Settings are saved in shared preferences and loaded in MainActivity
+```
+sharedPreferences = getSharedPreferences("settingsPrefs", MODE_PRIVATE)
+        sharedPreferences.registerOnSharedPreferenceChangeListener { _, key ->
+            if (key == "textSize") {
+                updateRecyclerView()
+            }
+        }
+        
+        val savedTheme = sharedPreferences.getInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(savedTheme)
+```
+   > Pomodoro timer saves all its information with shared preferences
+
+```
+   fun saveRemainingTime(time: Long) {
+           with(sharedPref.edit()) {
+               putLong(REMAINING_TIME_KEY, time)
+               apply()
+           }
+       }
+```
 
 7. Database
+ > Task Items are saved in a room database
+```
+fun getDatabase(context: Context): TaskItemDatabase{
+            return INSTANCE ?: synchronized(this){
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,TaskItemDatabase::class.java,"task_item_database"
+                ).build()
+                INSTANCE = instance
+                instance
+            }
+```
 
 8. Notifications
+   > Notifications are sent for the pomodoro timer
+   ```
+   sendNotification("Large Break Started: ${selectedLargeBreakTime} minutes")
+   ```
+   > The music service sends notifications when the music is running in the background
+   ```
+    startForeground(1, createNotification(isPlaying = true))
+   ```
 
 ## XML Layouts
 
