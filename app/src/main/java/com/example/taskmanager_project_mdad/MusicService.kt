@@ -38,8 +38,6 @@ class MusicService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-
         when (intent?.action) {
             ACTION_START -> {
 
@@ -133,7 +131,7 @@ class MusicService : Service() {
     override fun onDestroy() {
             super.onDestroy()
             stopMusic()
-            mediaPlayer.release()
+           mediaPlayer.release()
             Log.d("MusicService", "Service destroyed")
         }
 

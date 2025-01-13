@@ -51,6 +51,9 @@
             android:name=".PomodoroNotificationService"
             android:exported="false"
             android:foregroundServiceType="dataSync"/>
+        <service
+            android:name=".BackgroundService"
+            android:exported="false" />
       
     </application>
 

@@ -42,7 +42,7 @@ class PomodoroNotificationService : Service() {
 
         startNotification(message, notificationId)
 
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     private fun startNotification(message: String, notificationId: Int) {

@@ -1,5 +1,6 @@
 package com.example.taskmanager_project_mdad
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.RadioButton
 import android.widget.SeekBar
@@ -54,8 +55,16 @@ class SettingsActivity : AppCompatActivity() {
         // Theme change listener
         binding.themeOptions.setOnCheckedChangeListener { _, checkedId ->
             val theme = when (checkedId) {
-                R.id.radioLight -> AppCompatDelegate.MODE_NIGHT_NO
-                R.id.radioDark -> AppCompatDelegate.MODE_NIGHT_YES
+                R.id.radioLight -> {
+                    val intent = Intent(this, BackgroundService::class.java)
+                    stopService(intent)
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                R.id.radioDark -> {
+                    val intent = Intent(this, BackgroundService::class.java)
+                    startService(intent)
+                    AppCompatDelegate.MODE_NIGHT_YES
+                }
                 else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
             AppCompatDelegate.setDefaultNightMode(theme)
@@ -64,3 +73,4 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
+

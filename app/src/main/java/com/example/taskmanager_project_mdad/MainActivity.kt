@@ -17,6 +17,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.telephony.TelephonyManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 
 
@@ -50,6 +51,9 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         checkPermissions()
+
+
+
 
         val filter = IntentFilter("com.example.taskmanager_project_mdad.MUSIC_STOPPED")
         registerReceiver(musicStoppedReceiver, filter, Context.RECEIVER_EXPORTED)
@@ -93,6 +97,9 @@ class MainActivity : AppCompatActivity(), TaskItemClickListner {
                 updateRecyclerView()
             }
         }
+
+        val savedTheme = sharedPreferences.getInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(savedTheme)
 
         setRecycleView()
 
