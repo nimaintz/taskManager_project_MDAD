@@ -80,12 +80,11 @@ TaskManagerApp/
 2. Background Services
    > Music Service plays music in the background. It also starts a notification so that the user can close the music without entering the app again.
    ```
-   private fun startMusic() {
-        if (!mediaPlayer.isPlaying) {
-            mediaPlayer.start()
-            startForeground(1, createNotification(isPlaying = true))
-            Log.d("MusicService", "Music started")
-        }
+   override fun onCreate() {
+        super.onCreate()
+        mediaPlayer = MediaPlayer.create(this, R.raw.bg_music_1)
+        mediaPlayer.isLooping = true
+        createNotificationChannel()
     }
    ```
    > Settings keeps track of how long the user kept the dark mode until the app was destroyed. This is a feature that could be further implemented to monitor user interaction with new features.
